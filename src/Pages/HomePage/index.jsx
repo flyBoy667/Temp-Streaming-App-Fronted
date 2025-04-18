@@ -13,6 +13,7 @@ import {
     Tooltip,
     Typography,
 } from "@mui/joy"
+import {api} from "../../Services/api.js";
 
 
 const ThermostatIcon = () => (
@@ -75,22 +76,31 @@ const theme = extendTheme({
 export const HomePage = () => {
     const [temperature, setTemperature] = useState("")
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [error, setError] = useState(null)
     const [lastTemp, setLastTemp] = useState(null)
     const [colorLevel, setColorLevel] = useState("primary"
     )
 
     const onSubmit = async (temp) => {
-        setIsSubmitting(true)
-        // Simuler un appel API
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-        setLastTemp(temp)
-        setIsSubmitting(false)
+        try {
+            setIsSubmitting(true)
+            await api.post('/api/temperature', {
+                temperature: temp
+            })
 
-        // Changer la couleur en fonction de la température
-        if (temp < 10) setColorLevel("info")
-        else if (temp < 25) setColorLevel("success")
-        else if (temp < 35) setColorLevel("warning")
-        else setColorLevel("danger")
+            setLastTemp(temp)
+            setIsSubmitting(false)
+
+            // Changer la couleur en fonction de la température
+            if (temp < 10) setColorLevel("info")
+            else if (temp < 25) setColorLevel("success")
+            else if (temp < 35) setColorLevel("warning")
+            else setColorLevel("danger")
+
+        } catch (err) {
+            setError("Une erreur est survenue lors de l'ajout")
+            console.log(err)
+        }
     }
 
     const handleSubmit = (e) => {
