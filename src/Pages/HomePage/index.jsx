@@ -205,6 +205,7 @@ export const HomePage = () => {
                                             </IconButton>
                                         </Tooltip>
                                     }
+
                                     sx={{
                                         "--Input-focusedThickness": "2px",
                                         "--Input-radius": "12px",
